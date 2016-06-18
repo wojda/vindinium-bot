@@ -19,7 +19,7 @@ case class Pos(x: Int, y: Int) {
     case West  ⇒ copy(y = y - 1)
   }
 
-  def isIn(size: Int) = (x >= 0 && x < size && y >= 0 && y < size)
+  def isIn(size: Int) = x >= 0 && x < size && y >= 0 && y < size
 }
 
 sealed trait Tile
@@ -34,7 +34,8 @@ object Tile {
 case class Board(size: Int, tiles: Vector[Tile]) {
 
   def at(pos: Pos): Option[Tile] =
-    if (pos isIn size) tiles lift (pos.x * size + pos.y) else None
+    if (pos.isIn(size)) tiles.lift(pos.x * size + pos.y)
+    else None
 }
 
 case class Hero(
@@ -47,8 +48,7 @@ case class Hero(
   spawnPos: Pos,
   crashed: Boolean,
   elo: Option[Int]) {
-
-  override def toString = s"Hero $id $pos life:$life mine:$mineCount gold:$gold"
+    override def toString = s"Hero $id $pos life:$life mine:$mineCount gold:$gold"
   }
 
 case class Game(

@@ -71,7 +71,7 @@ object App {
       action
     }
     catch {
-      case e: scalaj.http.HttpException ⇒ println(s"\n[${e.code}] ${e.body}")
+      case e: scalaj.http.HttpStatusException ⇒ println(s"\n[${e.code}] ${e.body}")
       case e: Exception                 ⇒ println(s"\n$e")
     }
   }
@@ -79,7 +79,7 @@ object App {
   @annotation.tailrec
   def step(server: VindiniumClient, input: Input) {
     if (!input.game.finished) {
-      print(".")
+      println(s"Hero position: ${input.hero.pos}")
       step(server, server.move(input.playUrl, bot move input))
     }
   }
