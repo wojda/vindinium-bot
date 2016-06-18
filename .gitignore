@@ -1,1 +1,24 @@
+### SBT template
 target/
+project/target/
+lib_managed/
+src_managed/
+project/boot/
+.history
+.cache
+
+### Scala template
+*.class
+*.log
+
+### Intellij Idea specific file
+.idea/
+*.iml
+/out/
+
+# Crashlytics plugin (for Android Studio and IntelliJ)
+com_crashlytics_export_strings.xml
+crashlytics.properties
+crashlytics-build.properties
+fabric.properties
+

@@ -1,10 +1,13 @@
-package bot
+package vindinium
 
-object Main {
+import vindinium.bot.{Bot, Input, RandomBot, TavernFan}
+import vindinium.client.VindiniumClient
 
-  val bot: Bot = new RandomBot
+object App {
 
-  def main(args: Array[String]) = makeServer match {
+  val bot: Bot = new TavernFan
+
+  def main(args: Array[String]) = makeClient match {
     case Left(error) ⇒ println(error)
     case Right(server) ⇒ args match {
       case Array() ⇒
@@ -21,7 +24,7 @@ object Main {
     }
   }
 
-  def arena(server: Server, games: Int) {
+  def arena(server: VindiniumClient, games: Int) {
     @annotation.tailrec
     def oneGame(it: Int) {
       println(s"[$it/$games] Waiting for pairing...")
@@ -36,7 +39,7 @@ object Main {
     }
   }
 
-  def training(server: Server, boot: Server ⇒ Input) {
+  def training(server: VindiniumClient, boot: VindiniumClient ⇒ Input) {
     failsafe {
       val input = boot(server)
       println("Training game " + input.viewUrl)
@@ -45,7 +48,7 @@ object Main {
     }
   }
 
-  def steps(server: Server, input: Input) {
+  def steps(server: VindiniumClient, input: Input) {
     failsafe {
       step(server, input)
     }
@@ -62,19 +65,19 @@ object Main {
   }
 
   @annotation.tailrec
-  def step(server: Server, input: Input) {
+  def step(server: VindiniumClient, input: Input) {
     if (!input.game.finished) {
       print(".")
       step(server, server.move(input.playUrl, bot move input))
     }
   }
 
-  def makeServer = (
-    Option(System.getProperty("server")) getOrElse "http://vindinium.org/",
+  def makeClient = (
+    Option(System.getProperty("server")).getOrElse("http://vindinium.org/"),
     System.getProperty("key")
   ) match {
       case (_, null)  ⇒ Left("Specify the user key with -Dkey=mySecretKey")
-      case (url, key) ⇒ Right(new Server(url + "/api", key))
+      case (url, key) ⇒ Right(new VindiniumClient(url + "/api", key))
     }
 
   def int(str: String) = java.lang.Integer.parseInt(str)

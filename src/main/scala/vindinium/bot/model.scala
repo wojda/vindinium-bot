@@ -1,17 +1,17 @@
-package bot
+package vindinium.bot
 
-object Dir extends Enumeration {
-  type Dir = Value
+object Move extends Enumeration {
+  type Move = Value
   val Stay, North, South, East, West = Value
 }
 
-import Dir._
+import vindinium.bot.Move._
 
 case class Pos(x: Int, y: Int) {
 
   def neighbors = Set(North, South, West, East) map to
 
-  def to(dir: Dir) = dir match {
+  def to(move: Move) = move match {
     case Stay  ⇒ this
     case North ⇒ copy(x = x - 1)
     case South ⇒ copy(x = x + 1)
