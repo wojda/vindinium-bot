@@ -1,7 +1,11 @@
 package vindinium
 
-import vindinium.bot.{Bot, Input, RandomBot, TavernFan}
+import os.Scripts._
+import vindinium.bot.{Bot, Input, TavernFan}
 import vindinium.client.VindiniumClient
+
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.{Failure, Success}
 
 object App {
 
@@ -43,6 +47,14 @@ object App {
     failsafe {
       val input = boot(server)
       println("Training game " + input.viewUrl)
+
+      openUrlInBrowser(input.viewUrl)
+        .flatMap(_ => focusWindowWithTitle(input.game.id))
+        .andThen {
+          case Success(_) => println("Successfully opened game in browser")
+          case Failure(e) => println(e)
+        }
+
       steps(server, input)
       println(s"\nFinished training game ${input.viewUrl}")
     }

@@ -13,7 +13,6 @@ Arena mode, 10 games:
 ```
 
 ## Package as single jar
-
 From sbt, run:
 
 ```
@@ -37,3 +36,8 @@ You can now run your bot like that:
 ```
 vindinium arena 3
 ```
+
+In case of training, application will open chromium browser and focus will be changed automatically to that window.
+Prerequisites:
+* chromium browser
+* wmctrl ( can be install by 'sudo apt-get install wmctrl')
