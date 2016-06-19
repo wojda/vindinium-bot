@@ -79,6 +79,7 @@ object App {
   def step(server: VindiniumClient, input: Input, bot: Bot) {
     if (!input.game.finished) {
       val (move, newBot) = bot.move(input)
+      println(s"Current bot's position: ${input.hero.pos}. Next move: $move")
       step(server, server.move(input.playUrl, move), newBot)
     }
   }
