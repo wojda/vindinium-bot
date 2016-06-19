@@ -1,22 +1,16 @@
-import org.scalacheck.Gen
+package vindinium
+
 import org.scalatest.prop.PropertyChecks
-import org.scalatest.{FlatSpec, Matchers}
+import testutil.UnitTest
+import vindinium.bot.ImplicitBoardReader._
 import vindinium.bot.Move._
 import vindinium.bot.Pos
 import vindinium.bot.Tile.Tavern
-import Boards._
-import vindinium.bot.ImplicitBoardReader._
 
-class FindTavernSpec extends FlatSpec with Matchers with PropertyChecks {
+class FindTavernSpec extends UnitTest with PropertyChecks with Boards with Generators {
 
   "Board" should "provide path to tavern" in {
-    //given
-    val positionGen = for {
-      x <- Gen.choose(0, board.size)
-      y <- Gen.choose(0, board.size)
-    } yield Pos(x, y)
-
-    forAll (positionGen) { (startPos: Pos) =>
+    forAll (positionGen(board.size)) { (startPos: Pos) =>
       //when
       val path: List[Move] = board.nearestTavernFrom(startPos)
 
@@ -27,7 +21,6 @@ class FindTavernSpec extends FlatSpec with Matchers with PropertyChecks {
   }
 
   it should "provide optimal path to tavern" in {
-    pending
     val startPos = Pos(0, 1)
     board.nearestTavernFrom(startPos) should contain theSameElementsAs List(South, South, South, East)
     board.nearestTavernFrom(startPos.to(East)) should contain theSameElementsAs  List(South, South, South)

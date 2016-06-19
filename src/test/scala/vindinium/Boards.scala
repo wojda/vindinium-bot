@@ -1,8 +1,10 @@
+package vindinium
+
 import play.api.libs.json.Json
 import vindinium.bot.Board
 import vindinium.client.VindiniumProtocol
 
-object Boards extends VindiniumProtocol {
+trait Boards extends VindiniumProtocol {
   val boardJson = """
                     |{
                     |   "size":10,
