@@ -9,7 +9,13 @@ import vindinium.bot.Move._
 
 case class Pos(x: Int, y: Int) {
 
-  def neighbors = Set(North, South, West, East) map to
+  def neighborsWithMove: Set[(Pos, Move)] =
+    Set(North, South, West, East)
+      .map(m => (to(m), m))
+      .filter(n => n._1.x >= 0 && n._1.y >= 0)
+      .filter(n => n._1.x <= 10 && n._1.y <= 10) //TODO: it's board logic, move it
+
+  def neighbors: Set[Pos] = neighborsWithMove.map(_._1)
 
   def to(move: Move) = move match {
     case Stay  ⇒ this

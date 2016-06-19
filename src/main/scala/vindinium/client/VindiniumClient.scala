@@ -5,7 +5,7 @@ import vindinium.bot.{Input, Move}
 
 import scalaj.http.{Http, HttpOptions, HttpRequest}
 
-final class VindiniumClient(endpoint: String, key: String) extends Protocol {
+final class VindiniumClient(endpoint: String, key: String) extends VindiniumProtocol {
 
   def arena: Input = send {
     Http(s"$endpoint/arena").postForm.params("key" -> key)

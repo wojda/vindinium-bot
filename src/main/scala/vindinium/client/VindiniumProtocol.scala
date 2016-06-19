@@ -7,8 +7,7 @@ import vindinium.bot._
 import scala.util.Try
 
 
-trait Protocol {
-
+trait VindiniumProtocol {
 
   implicit val posReads = Json.reads[Pos]
   implicit val boardReads = (

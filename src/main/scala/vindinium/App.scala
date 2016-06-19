@@ -1,15 +1,14 @@
 package vindinium
 
 import os.Scripts._
-import vindinium.bot.{Bot, Input, TavernFan}
+import vindinium.bot.behaviours.TavernFanBot
+import vindinium.bot.{Bot, Input}
 import vindinium.client.VindiniumClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
 object App {
-
-  val bot: Bot = new TavernFan
 
   def main(args: Array[String]) = makeClient match {
     case Left(error) ⇒ println(error)
@@ -62,7 +61,7 @@ object App {
 
   def steps(server: VindiniumClient, input: Input) {
     failsafe {
-      step(server, input)
+      step(server, input, bot = TavernFanBot())
     }
   }
 
@@ -77,10 +76,10 @@ object App {
   }
 
   @annotation.tailrec
-  def step(server: VindiniumClient, input: Input) {
+  def step(server: VindiniumClient, input: Input, bot: Bot) {
     if (!input.game.finished) {
-      println(s"Hero position: ${input.hero.pos}")
-      step(server, server.move(input.playUrl, bot move input))
+      val (move, newBot) = bot.move(input)
+      step(server, server.move(input.playUrl, move), newBot)
     }
   }
 
