@@ -1,7 +1,7 @@
 package vindinium
 
 import os.Scripts._
-import vindinium.bot.behaviours.GoldFeverBot
+import vindinium.bot.behaviours.LikesGoldButWantToLive
 import vindinium.bot.{Bot, Input}
 import vindinium.client.VindiniumClient
 
@@ -61,7 +61,7 @@ object App {
 
   def steps(server: VindiniumClient, input: Input) {
     failsafe {
-      step(server, input, bot = GoldFeverBot())
+      step(server, input, bot = LikesGoldButWantToLive())
     }
   }
 
@@ -71,7 +71,7 @@ object App {
     }
     catch {
       case e: scalaj.http.HttpStatusException ⇒ println(s"\n[${e.code}] ${e.body}")
-      case e: Exception                 ⇒ println(s"\n$e")
+      case e: Exception                       ⇒ println(s"\n$e")
     }
   }
 
