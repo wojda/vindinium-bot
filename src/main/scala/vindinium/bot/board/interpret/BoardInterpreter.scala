@@ -1,7 +1,7 @@
 package vindinium.bot.board.interpret
 
 import vindinium.bot.Move._
-import vindinium.bot.Tile.{Air, Mine}
+import vindinium.bot.Tile.Air
 import vindinium.bot.{Board, Pos, Tile}
 
 import scala.annotation.tailrec
@@ -10,11 +10,9 @@ import scala.collection.mutable
 trait BoardInterpreter {
   val board: Board
   type Path = (Pos, List[Move])
+  val maxPathLength = 20
 
-  def path(start: Pos, end: Pos, seekingTile: Tile = Air): Option[Path] =
-    findPath(start, seekingTile, (path) => path._1 == end)
-
-  def findPath(start: Pos, seekingTile: Tile, p: Path => Boolean = (_) => true): Option[Path] = {
+  def findPath(start: Pos, seekingTile: Tile => Boolean): Option[Path] = {
     val newExplored = mutable.Set[Pos]()
 
     def explore(explored: Stream[Path]): Stream[Path] = {
@@ -28,17 +26,17 @@ trait BoardInterpreter {
     }
 
     @tailrec
-    def doIt(paths: Stream[(Pos, List[Move])], predicate: Path => Boolean, counter: Int = 0): Option[Path] =
-      if(counter > 20) { None }
+    def doIt(paths: Stream[(Pos, List[Move])], seekingTile: Tile => Boolean, counter: Int = 0): Option[Path] =
+      if(counter > maxPathLength) { None }
       else {
         val newPaths = explore(paths)
-        newPaths.find(predicate) match {
+        newPaths.find(path => board.at(path._1).exists(seekingTile)) match {
           case x@Some(path) => Some((path._1, path._2.reverse))
-          case None => doIt(newPaths, predicate, counter+1)
+          case None => doIt(newPaths, seekingTile, counter+1)
         }
       }
 
-    doIt(Stream((start, List[Move]())), p)
+    doIt(Stream((start, List[Move]())), seekingTile)
   }
 
   private def pathsToAllNeighbours(path: Path): Stream[Path] =
@@ -46,10 +44,9 @@ trait BoardInterpreter {
       .neighborsWithMove
       .map(n => (n._1, n._2 :: path._2)).toStream
 
-  private def validPos(pos: Pos, seekingTile: Tile): Boolean = board.at(pos) match {
-    case Some(Air) => true
-    case Some(`seekingTile`) => true
-    case _ => false
-  }
-
+  private def validPos(pos: Pos, seekingTile: Tile => Boolean): Boolean =
+    board.at(pos).exists {
+      case Air => true
+      case t => seekingTile(t)
+    }
 }

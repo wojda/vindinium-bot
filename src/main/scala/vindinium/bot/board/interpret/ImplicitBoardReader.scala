@@ -1,28 +1,31 @@
 package vindinium.bot.board.interpret
 
 import vindinium.bot.Move.Move
-import vindinium.bot.Tile.{Mine, Tavern}
-import vindinium.bot.{Board, Pos}
+import vindinium.bot.Tile.Tavern
+import vindinium.bot.{Board, Hero, Pos, Tile}
 
 object ImplicitBoardReader {
 
   implicit class TileFinder(override val board: Board) extends BoardInterpreter {
 
-    def nearestMineFrom(pos: Pos): Option[List[Move]] =
-      findPath(pos, Mine(None), isAMine).map(_._2)
+    def nearestMineFrom(hero: Hero): Option[List[Move]] = {
 
-    private def isAMine(path: Path) = board.at(path._1) match {
-      case Some(Mine(_)) => true
-      case _ => false
+      val seekingAMine: PartialFunction[Tile, Boolean] = {
+        case Tile.NeutralMine() => true
+        case Tile.OwnedMine(heroId) if hero.id != heroId => true
+        case _ => false
+      }
+
+      findPath(hero.pos, seekingAMine).map(_._2)
     }
 
     def nearestTavernFrom(pos: Pos): List[Move] =
-      findPath(pos, Tavern, isATavern)
+      findPath(pos, seekingATavern)
         .get //TODO: What if there is no tavern on the board?
         ._2
 
-    private def isATavern(path: Path) = board.at(path._1) match {
-      case Some(Tavern) => true
+    private val seekingATavern: PartialFunction[Tile, Boolean] = {
+      case Tavern => true
       case _ => false
     }
   }

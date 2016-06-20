@@ -24,7 +24,8 @@ trait VindiniumProtocol {
     case List(' ', ' ') ⇒ Tile.Air
     case List('#', '#') ⇒ Tile.Wall
     case List('[', ']') ⇒ Tile.Tavern
-    case List('$', x) ⇒ Tile.Mine(int(x))
+    case List('$', '-') ⇒ Tile.NeutralMine()
+    case List('$', x) ⇒ Tile.OwnedMine(int(x).get)
     case List('@', x) ⇒ Tile.Hero(int(x) getOrElse sys.error(s"Can't parse $str"))
     case x ⇒ sys error s"Can't parse $str"
   }

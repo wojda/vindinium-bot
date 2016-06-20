@@ -34,7 +34,9 @@ object Tile {
   case object Wall extends Tile
   case object Tavern extends Tile
   case class Hero(id: Int) extends Tile
-  case class Mine(heroId: Option[Int]) extends Tile
+  class Mine extends Tile
+  case class NeutralMine() extends Mine
+  case class OwnedMine(heroId: Int) extends Mine
 }
 
 case class Board(size: Int, tiles: Vector[Tile]) {

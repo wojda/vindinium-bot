@@ -5,9 +5,13 @@ import vindinium.bot.Move._
 import vindinium.bot.board.interpret.ImplicitBoardReader._
 
 case class LikesGoldButWantToLive() extends Bot {
-  override def move(input: Input): (Move, Bot) =
-    if(input.hero.life < 30) youAreHurtGoToTavern(input)
+  val minimumHealthPoints = 40
+
+  override def move(input: Input): (Move, Bot) = {
+    println("HP: "+input.hero.life)
+    if (input.hero.life < minimumHealthPoints) youAreHurtGoToTavern(input)
     else goToMine(input)
+  }
 
   def youAreHurtGoToTavern(input: Input) = {
     val pathToTavern = input.game.board.nearestTavernFrom(input.hero.pos)
@@ -15,8 +19,8 @@ case class LikesGoldButWantToLive() extends Bot {
   }
 
   def goToMine(input: Input) = {
-    input.game.board.nearestMineFrom(input.hero.pos)
+    input.game.board.nearestMineFrom(input.hero)
       .map(pathToMine => (pathToMine.head, LikesGoldButWantToLive()))
-      .getOrElse((Stay, GoldFeverBot()))
+      .getOrElse((Stay, LikesGoldButWantToLive()))
   }
 }
