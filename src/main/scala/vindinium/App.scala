@@ -1,7 +1,7 @@
 package vindinium
 
 import os.Scripts._
-import vindinium.bot.behaviours.TavernFanBot
+import vindinium.bot.behaviours.GoldFeverBot
 import vindinium.bot.{Bot, Input}
 import vindinium.client.VindiniumClient
 
@@ -61,7 +61,7 @@ object App {
 
   def steps(server: VindiniumClient, input: Input) {
     failsafe {
-      step(server, input, bot = TavernFanBot())
+      step(server, input, bot = GoldFeverBot())
     }
   }
 
