@@ -8,10 +8,8 @@ object ImplicitBoardReader {
 
   implicit class TileFinder(override val board: Board) extends BoardInterpreter {
 
-    def nearestMineFrom(pos: Pos): List[Move] =
-      findPath(pos, Mine(None), isAMine)
-          .get
-          ._2
+    def nearestMineFrom(pos: Pos): Option[List[Move]] =
+      findPath(pos, Mine(None), isAMine).map(_._2)
 
     private def isAMine(path: Path) = board.at(path._1) match {
       case Some(Mine(_)) => true

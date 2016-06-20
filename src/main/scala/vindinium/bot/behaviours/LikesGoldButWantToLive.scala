@@ -4,27 +4,19 @@ import vindinium.bot.{Bot, Input}
 import vindinium.bot.Move._
 import vindinium.bot.board.interpret.ImplicitBoardReader._
 
-object LikesGoldButWantToLive {
-  def apply() = new LikesGoldButWantToLive(None)
-  def apply(path: List[Move]) = new LikesGoldButWantToLive(Some(path))
-  def apply(tavernPath: List[Move], hurt: Boolean) = new LikesGoldButWantToLive(Some(tavernPath), hurt)
-}
+case class LikesGoldButWantToLive() extends Bot {
+  override def move(input: Input): (Move, Bot) =
+    if(input.hero.life < 30) youAreHurtGoToTavern(input)
+    else goToMine(input)
 
-class LikesGoldButWantToLive(path: Option[List[Move]], hurt: Boolean = false) extends Bot {
-  override def move(input: Input): (Move, Bot) = path match {
-    case Some(m :: ms) =>
-      if(hurt) {
-        (m, LikesGoldButWantToLive(ms))
-      } else if(input.hero.life <= 20) {
-        val pathToTavern = input.game.board.nearestTavernFrom(input.hero.pos)
-        (pathToTavern.head, LikesGoldButWantToLive(pathToTavern.tail, hurt = true))
-      } else {
-        val pathToMine = input.game.board.nearestMineFrom(input.hero.pos)
-        (pathToMine.head, LikesGoldButWantToLive(pathToMine.tail))
-      }
-    case _ =>
-      val pathToMine = input.game.board.nearestMineFrom(input.hero.pos)
-      (pathToMine.head, LikesGoldButWantToLive(pathToMine.tail))
+  def youAreHurtGoToTavern(input: Input) = {
+    val pathToTavern = input.game.board.nearestTavernFrom(input.hero.pos)
+    (pathToTavern.head, LikesGoldButWantToLive())
   }
 
+  def goToMine(input: Input) = {
+    input.game.board.nearestMineFrom(input.hero.pos)
+      .map(pathToMine => (pathToMine.head, LikesGoldButWantToLive()))
+      .getOrElse((Stay, GoldFeverBot()))
+  }
 }

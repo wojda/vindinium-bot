@@ -14,8 +14,9 @@ class GoldFeverBot(path: Option[List[Move]]) extends Bot {
   override def move(input: Input): (Move, Bot) = path match {
     case Some(m :: ms) => (m, GoldFeverBot(ms))
     case _ =>
-      val pathToMine = input.game.board.nearestMineFrom(input.hero.pos)
-      (pathToMine.head, GoldFeverBot(pathToMine.tail))
+      input.game.board.nearestMineFrom(input.hero.pos)
+        .map(pathToMine => (pathToMine.head, GoldFeverBot(pathToMine.tail)))
+        .getOrElse((Stay, GoldFeverBot()))
   }
 
 }
