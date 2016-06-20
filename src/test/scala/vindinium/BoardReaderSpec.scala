@@ -1,39 +1,20 @@
 package vindinium
 
-import org.scalacheck.Gen
 import org.scalatest.prop.PropertyChecks
 import testutil.UnitTest
-import vindinium.bot.ImplicitBoardReader._
+import vindinium.bot.Move._
 import vindinium.bot.Pos
+import vindinium.bot.board.interpret.ImplicitBoardReader._
 
 class BoardReaderSpec extends UnitTest with Boards with PropertyChecks with Generators {
 
-  "BoardReader" should "read board by one step in every direction" in {
+  "BoardReader" should "provide path from position to position bypassing all obstacles" in {
     //given
-    val center = Pos(board.size/2, board.size/2)
-    val pathsMoves = board.allPathsFrom(center).take(12).map{case (_, moves) => moves}.toList
-    //expect
-    pathsMoves.map(_.size) shouldNot contain(3)
-  }
-
-  it should "provide one path per position, no duplicates" in {
-    val pathsRange = Gen.choose(min = 1, max = 40)
-
-    forAll(positionGen(board.size), pathsRange) { (startPos: Pos, noPaths) =>
-      //when
-      val paths: List[Pos] = board.allPathsFrom(startPos).take(noPaths).map{ case (pos, path) => pos}.toList
-      //then
-      paths shouldNot containDuplicates
-    }
-  }
-
-  it should "provide paths without duplicates for position = (3, 2)" in {
-    //given
-    val startPos = Pos(3, 2)
-    val noPaths = 6
+    val startPos = Pos(2, 3)
+    val endPos = Pos(2, 6)
     //when
-    val pathsPositions: List[Pos] = board.allPathsFrom(startPos).take(noPaths).map{ case (pos, path) => pos}.toList
+    val maybePath = board.path(startPos, endPos)
     //then
-    pathsPositions shouldNot containDuplicates
+    maybePath shouldBe Some((endPos, List(South, East, East, East, North)))
   }
 }

@@ -1,8 +1,8 @@
 package vindinium.bot.behaviours
 
-import vindinium.bot.ImplicitBoardReader._
 import vindinium.bot.Move._
 import vindinium.bot.{Bot, Input}
+import vindinium.bot.board.interpret.ImplicitBoardReader._
 
 /**
   * The goal of the life of this bot is to find a tavern and stay there as long as possible.

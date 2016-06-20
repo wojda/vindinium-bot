@@ -2,20 +2,21 @@ package vindinium
 
 import org.scalatest.prop.PropertyChecks
 import testutil.UnitTest
-import vindinium.bot.ImplicitBoardReader._
 import vindinium.bot.Move._
 import vindinium.bot.Pos
-import vindinium.bot.Tile.Tavern
+import vindinium.bot.Tile.{Air, Tavern}
+import vindinium.bot.board.interpret.ImplicitBoardReader._
 
 class FindTavernSpec extends UnitTest with PropertyChecks with Boards with Generators {
 
   "Board" should "provide path to tavern" in {
-    forAll (positionGen(board.size)) { (startPos: Pos) =>
-      //when
-      val path: List[Move] = board.nearestTavernFrom(startPos)
-      //then
-      val endPosition = path.foldLeft(startPos)((pos, move) => pos.to(move))
-      board.at(endPosition) shouldBe Some(Tavern)
+    forAll (positionGen(board.size)) { (startPos: Pos) => whenever(board.at(startPos).contains(Air)) {
+        //when
+        val path: List[Move] = board.nearestTavernFrom(startPos)
+        //then
+        val endPosition = path.foldLeft(startPos)((pos, move) => pos.to(move))
+        board.at(endPosition) shouldBe Some(Tavern)
+      }
     }
   }
 
@@ -37,4 +38,7 @@ class FindTavernSpec extends UnitTest with PropertyChecks with Boards with Gener
     pending
   }
 
+  it should "provide path to the nearest tavern bypassing all obstacles" in {
+    pending
+  }
 }
