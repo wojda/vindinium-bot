@@ -19,7 +19,8 @@ class TavernFanBot(path: Option[List[Move]]) extends Bot {
     case Some(m :: ms) => (m, TavernFanBot(ms))
     case Some(Nil) => (Stay, TavernFanBot(List()))
     case None =>
-      val pathToTavern = input.game.board.nearestTavernFrom(input.hero.pos)
-      (pathToTavern.head, TavernFanBot(pathToTavern.tail))
+      input.game.board.nearestTavernFrom(input.hero.pos)
+        .map(pathToTavern => (pathToTavern.head, LikesGoldButWantToLive()))
+        .getOrElse((Stay, LikesGoldButWantToLive()))
   }
 }

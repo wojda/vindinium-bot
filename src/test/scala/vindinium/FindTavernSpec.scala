@@ -12,7 +12,7 @@ class FindTavernSpec extends UnitTest with PropertyChecks with Boards with Gener
   "Board" should "provide path to tavern" in {
     forAll (positionGen(board.size)) { (startPos: Pos) => whenever(board.at(startPos).contains(Air)) {
         //when
-        val path: List[Move] = board.nearestTavernFrom(startPos)
+        val path: List[Move] = board.nearestTavernFrom(startPos).get
         //then
         val endPosition = path.foldLeft(startPos)((pos, move) => pos.to(move))
         board.at(endPosition) shouldBe Some(Tavern)
@@ -30,7 +30,7 @@ class FindTavernSpec extends UnitTest with PropertyChecks with Boards with Gener
 
   forAll(testCases) { (startPos, expectedMoves) =>
     it should s"provide the shortest path to tavern from $startPos" in {
-      board.nearestTavernFrom(startPos) should contain theSameElementsAs expectedMoves
+      board.nearestTavernFrom(startPos).get should contain theSameElementsAs expectedMoves
     }
   }
 

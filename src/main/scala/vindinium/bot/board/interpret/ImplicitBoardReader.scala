@@ -9,7 +9,6 @@ object ImplicitBoardReader {
   implicit class TileFinder(override val board: Board) extends BoardInterpreter {
 
     def nearestMineFrom(hero: Hero): Option[List[Move]] = {
-
       val seekingAMine: PartialFunction[Tile, Boolean] = {
         case Tile.NeutralMine() => true
         case Tile.OwnedMine(heroId) if hero.id != heroId => true
@@ -19,10 +18,7 @@ object ImplicitBoardReader {
       findPath(hero.pos, seekingAMine).map(_._2)
     }
 
-    def nearestTavernFrom(pos: Pos): List[Move] =
-      findPath(pos, seekingATavern)
-        .get //TODO: What if there is no tavern on the board?
-        ._2
+    def nearestTavernFrom(pos: Pos): Option[List[Move]] = findPath(pos, seekingATavern).map(_._2)
 
     private val seekingATavern: PartialFunction[Tile, Boolean] = {
       case Tavern => true

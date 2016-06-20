@@ -14,8 +14,9 @@ case class LikesGoldButWantToLive() extends Bot {
   }
 
   def youAreHurtGoToTavern(input: Input) = {
-    val pathToTavern = input.game.board.nearestTavernFrom(input.hero.pos)
-    (pathToTavern.head, LikesGoldButWantToLive())
+    input.game.board.nearestTavernFrom(input.hero.pos)
+      .map(pathToTavern => (pathToTavern.head, LikesGoldButWantToLive()))
+      .getOrElse((Stay, LikesGoldButWantToLive()))
   }
 
   def goToMine(input: Input) = {
