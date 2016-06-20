@@ -4,11 +4,16 @@ import play.api.libs.json._
 import vindinium.bot.{Input, Move}
 
 import scalaj.http.{Http, HttpOptions, HttpRequest}
+import scala.concurrent.duration._
 
 final class VindiniumClient(endpoint: String, key: String) extends VindiniumProtocol {
+  val connectionTimeout = 1 minute
+  val readTimeout = 10 seconds
 
   def arena: Input = send {
-    Http(s"$endpoint/arena").postForm.params("key" -> key)
+    Http(s"$endpoint/arena")
+      .timeout(connectionTimeout.toMillis.toInt, readTimeout.toMillis.toInt)
+      .postForm.params("key" -> key)
   }
 
   def training(turns: Int, map: Option[String] = None): Input = send {
