@@ -6,16 +6,17 @@ object Move extends Enumeration {
 }
 
 import vindinium.bot.Move._
+import vindinium.bot.board.Path
 
 case class Pos(x: Int, y: Int) {
+  private val maxSupportedBoardSize = 50
 
-  def neighborsWithMove: Set[(Pos, Move)] =
+  def pathsToNeighbours: Set[Path] =
     Set(North, South, West, East)
-      .map(m => (to(m), m))
-      .filter(n => n._1.x >= 0 && n._1.y >= 0)
-      .filter(n => n._1.x <= 10 && n._1.y <= 10) //TODO: it's board logic, move it
+      .map(m => Path(this, List(m), to(m)))
+      .filter(_.end.isIn(maxSupportedBoardSize)) //TODO: it's board logic, move it there
 
-  def neighbors: Set[Pos] = neighborsWithMove.map(_._1)
+  def neighbors: Set[Pos] = pathsToNeighbours.map(_.end)
 
   def to(move: Move) = move match {
     case Stay  ⇒ this
@@ -23,6 +24,14 @@ case class Pos(x: Int, y: Int) {
     case South ⇒ copy(x = x + 1)
     case East  ⇒ copy(y = y + 1)
     case West  ⇒ copy(y = y - 1)
+  }
+
+  def back(move: Move) = move match {
+    case Stay => this
+    case North => copy(x = x + 1)
+    case South => copy(x = x - 1)
+    case East => copy(y = y - 1)
+    case West => copy(y = y + 1)
   }
 
   def isIn(size: Int) = x >= 0 && x < size && y >= 0 && y < size
@@ -37,6 +46,11 @@ object Tile {
   class Mine extends Tile
   case class NeutralMine() extends Mine
   case class OwnedMine(heroId: Int) extends Mine
+
+  def isObstacle(tile: Tile) = tile match {
+    case Air => false
+    case _ => true
+  }
 }
 
 case class Board(size: Int, tiles: Vector[Tile]) {

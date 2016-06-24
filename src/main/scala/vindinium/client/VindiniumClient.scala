@@ -5,6 +5,7 @@ import vindinium.bot.{Input, Move}
 
 import scalaj.http.{Http, HttpOptions, HttpRequest}
 import scala.concurrent.duration._
+import scala.language.postfixOps
 
 final class VindiniumClient(endpoint: String, key: String) extends VindiniumProtocol {
   val connectionTimeout = 1 minute

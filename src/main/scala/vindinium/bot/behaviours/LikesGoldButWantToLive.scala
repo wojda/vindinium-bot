@@ -14,14 +14,14 @@ case class LikesGoldButWantToLive() extends Bot {
   }
 
   def youAreHurtGoToTavern(input: Input) = {
-    input.game.board.nearestTavernFrom(input.hero.pos)
-      .map(pathToTavern => (pathToTavern.head, LikesGoldButWantToLive()))
+    input.game.board.pathToNearestTavernFrom(input.hero.pos)
+      .map(pathToTavern => (pathToTavern.moves.head, LikesGoldButWantToLive()))
       .getOrElse((Stay, LikesGoldButWantToLive()))
   }
 
   def goToMine(input: Input) = {
     input.game.board.nearestMineFrom(input.hero)
-      .map(pathToMine => (pathToMine.head, LikesGoldButWantToLive()))
+      .map(pathToMine => (pathToMine.moves.head, LikesGoldButWantToLive()))
       .getOrElse((Stay, LikesGoldButWantToLive()))
   }
 }

@@ -15,7 +15,7 @@ class GoldFeverBot(path: Option[List[Move]]) extends Bot {
     case Some(m :: ms) => (m, GoldFeverBot(ms))
     case _ =>
       input.game.board.nearestMineFrom(input.hero)
-        .map(pathToMine => (pathToMine.head, GoldFeverBot(pathToMine.tail)))
+        .map(pathToMine => (pathToMine.moves.head, GoldFeverBot(pathToMine.moves.tail)))
         .getOrElse((Stay, GoldFeverBot()))
   }
 
