@@ -1,7 +1,6 @@
-package vindinium
+package vindinium.bot.domain.board
 
 import play.api.libs.json.Json
-import vindinium.bot.domain.board.Board
 import vindinium.bot.infrastructure.VindiniumProtocol
 
 import scala.io.Source
