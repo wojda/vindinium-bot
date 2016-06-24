@@ -1,8 +1,8 @@
 package vindinium
 
 import play.api.libs.json.Json
-import vindinium.bot.Board
-import vindinium.client.VindiniumProtocol
+import vindinium.bot.domain.board.Board
+import vindinium.bot.infrastructure.VindiniumProtocol
 
 import scala.io.Source
 

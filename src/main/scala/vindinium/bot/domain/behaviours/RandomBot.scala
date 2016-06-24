@@ -1,8 +1,8 @@
-package vindinium.bot.behaviours
+package vindinium.bot.domain.behaviours
 
-import vindinium.bot.Move._
-import vindinium.bot.Tile.Wall
-import vindinium.bot.{Bot, Input}
+import vindinium.bot.infrastructure.Input
+import vindinium.bot.domain.board.Move._
+import vindinium.bot.domain.board.Tile.Wall
 
 import scala.util.Random
 

@@ -1,8 +1,8 @@
 package vindinium
 
 import org.scalacheck.Gen
-import vindinium.bot.Tile.Air
-import vindinium.bot.{Board, Pos}
+import vindinium.bot.domain.board.Tile.Air
+import vindinium.bot.domain.board.{Board, Pos}
 
 trait Generators {
 

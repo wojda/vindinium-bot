@@ -1,8 +1,9 @@
-package vindinium.client
+package vindinium.bot.infrastructure
 
 import play.api.libs.functional.syntax._
 import play.api.libs.json._
-import vindinium.bot._
+import vindinium.bot.domain.board.{Board, Pos, Tile}
+import vindinium.bot.domain.{Game, Hero}
 
 import scala.util.Try
 

@@ -1,11 +1,11 @@
-package vindinium.client
+package vindinium.bot.infrastructure
 
 import play.api.libs.json._
-import vindinium.bot.{Input, Move}
+import vindinium.bot.domain.board.Move
 
-import scalaj.http.{Http, HttpOptions, HttpRequest}
 import scala.concurrent.duration._
 import scala.language.postfixOps
+import scalaj.http.{Http, HttpOptions, HttpRequest}
 
 final class VindiniumClient(endpoint: String, key: String) extends VindiniumProtocol {
   val connectionTimeout = 1 minute

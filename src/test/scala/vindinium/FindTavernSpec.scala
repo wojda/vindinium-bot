@@ -2,11 +2,11 @@ package vindinium
 
 import org.scalatest.prop.{Checkers, PropertyChecks}
 import testutil.UnitSpec
-import vindinium.bot.Move._
-import vindinium.bot.Pos
-import vindinium.bot.Tile.Tavern
-import vindinium.bot.board.interpret.ImplicitBoardReader._
+import vindinium.bot.domain.board.interpret.ImplicitBoardReader._
 import testutil.PathMatchers._
+import vindinium.bot.domain.board.Move._
+import vindinium.bot.domain.board.Pos
+import vindinium.bot.domain.board.Tile.Tavern
 
 class FindTavernSpec extends UnitSpec with PropertyChecks with Boards with Generators with Checkers {
   implicit override val generatorDrivenConfig = PropertyCheckConfig(minSuccessful = 300)

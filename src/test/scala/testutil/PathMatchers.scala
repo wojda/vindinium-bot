@@ -1,8 +1,7 @@
 package testutil
 
 import org.scalatest.matchers.{MatchResult, Matcher}
-import vindinium.bot.board.Path
-import vindinium.bot.{Board, Tile}
+import vindinium.bot.domain.board.{Board, Path, Tile}
 
 object PathMatchers extends PathMatchers
 

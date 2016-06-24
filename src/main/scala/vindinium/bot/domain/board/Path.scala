@@ -1,7 +1,6 @@
-package vindinium.bot.board
+package vindinium.bot.domain.board
 
-import vindinium.bot.Move._
-import vindinium.bot.Pos
+import vindinium.bot.domain.board.Move._
 
 object Path {
   def empty(pos: Pos): Path = Path(pos, List(), pos)

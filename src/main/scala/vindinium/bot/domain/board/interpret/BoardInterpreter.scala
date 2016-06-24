@@ -1,8 +1,7 @@
-package vindinium.bot.board.interpret
+package vindinium.bot.domain.board.interpret
 
-import vindinium.bot.Tile.Air
-import vindinium.bot.board.Path
-import vindinium.bot.{Board, Pos, Tile}
+import vindinium.bot.domain.board.Tile.Air
+import vindinium.bot.domain.board.{Board, Path, Pos, Tile}
 
 import scala.annotation.tailrec
 import scala.collection.mutable

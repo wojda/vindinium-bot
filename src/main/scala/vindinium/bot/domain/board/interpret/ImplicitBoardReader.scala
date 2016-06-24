@@ -1,8 +1,8 @@
-package vindinium.bot.board.interpret
+package vindinium.bot.domain.board.interpret
 
-import vindinium.bot.Tile.Tavern
-import vindinium.bot.board.Path
-import vindinium.bot.{Board, Hero, Pos, Tile}
+import vindinium.bot.domain.Hero
+import vindinium.bot.domain.board.Tile.Tavern
+import vindinium.bot.domain.board.{Board, Path, Pos, Tile}
 
 object ImplicitBoardReader {
 

@@ -1,8 +1,7 @@
-package vindinium.bot.board
+package vindinium.bot.domain.board
 
 import testutil.UnitSpec
-import vindinium.bot.Move._
-import vindinium.bot.Pos
+import vindinium.bot.domain.board.Move._
 
 class PathSpec extends UnitSpec {
   val path = Path(Pos(0,0), List(South, East), Pos(1, 1))

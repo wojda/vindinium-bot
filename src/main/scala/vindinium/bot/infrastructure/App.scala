@@ -1,9 +1,7 @@
-package vindinium
+package vindinium.bot.infrastructure
 
 import os.Scripts._
-import vindinium.bot.behaviours.LikesGoldButWantToLive
-import vindinium.bot.{Bot, Input}
-import vindinium.client.VindiniumClient
+import vindinium.bot.domain.behaviours.{Bot, LikesGoldButWantToLive}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
