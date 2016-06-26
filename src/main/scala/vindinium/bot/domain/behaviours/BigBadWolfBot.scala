@@ -9,17 +9,19 @@ case class BigBadWolfBot() extends Bot {
 
   override def move(input: Input): (Move, Bot) = {
     import input._
-    val pathToNearestEnemy = game.board.pathToNearestHeroFrom(hero.pos, excludedHeroId = hero.id)
+    lazy val pathToTavern: List[Move] = pathToNearestTavern(input)
+    lazy val pathToNearestEnemy: Option[Path] = game.board.pathToNearestHeroFrom(hero.pos, excludedHeroId = hero.id)
 
     val nextMove =
-      if(hero.life < minimumHealthPoints) pathToTavern(input).head
+      if(pathToTavern.size == 1 && hero.life < 90) pathToTavern.head
+      else if(hero.life < minimumHealthPoints) pathToTavern.head
       else if(enemyIsCloseAndHasMine(pathToNearestEnemy, input)) pathToNearestEnemy.get.moves.head
       else pathToMine(input).head
 
     (nextMove, this)
   }
 
-  private def pathToTavern(input: Input): List[Move] =
+  private def pathToNearestTavern(input: Input): List[Move] =
     input.game.board.pathToNearestTavernFrom(input.hero.pos)
       .map(_.moves)
       .getOrElse(List(Stay))
