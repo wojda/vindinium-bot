@@ -1,4 +1,5 @@
-# Vindinium client
+# Vindinium Bot 
+[![Build Status](https://travis-ci.org/wojda/vindinium-bot.svg?branch=master)](https://travis-ci.org/wojda/vindinium-bot) 
 
 ## Develop / run
 
