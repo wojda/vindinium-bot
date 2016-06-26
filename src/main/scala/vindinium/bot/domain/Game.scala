@@ -12,6 +12,7 @@ case class Hero(
   spawnPos: Pos,
   crashed: Boolean,
   elo: Option[Int]) {
+    lazy val hasMine: Boolean = mineCount > 0
     override def toString = s"Hero $id $pos life:$life mine:$mineCount gold:$gold"
   }
 
