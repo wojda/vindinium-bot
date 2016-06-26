@@ -1,9 +1,10 @@
 package vindinium.bot.infrastructure
 
 import os.Scripts._
-import vindinium.bot.domain.behaviours.{Bot, OffensiveBot}
+import vindinium.bot.domain.behaviours.{BigBadWolfBot, Bot}
 
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
 object App {
@@ -31,6 +32,9 @@ object App {
       println(s"[$it/$games] Waiting for pairing...")
       val input = server.arena
       println(s"[$it/$games] Start arena game ${input.viewUrl}")
+
+      viewGameInBrowser(input)
+
       steps(server, input)
       println(s"\n[$it/$games] Finished arena game ${input.viewUrl}")
       if (it < games) oneGame(it + 1)
@@ -45,21 +49,24 @@ object App {
       val input = boot(server)
       println("Training game " + input.viewUrl)
 
-      openUrlInBrowser(input.viewUrl)
-        .flatMap(_ => focusWindowWithTitle(input.game.id))
-        .andThen {
-          case Success(_) => println("Successfully opened game in browser")
-          case Failure(e) => println(e)
-        }
+      viewGameInBrowser(input)
 
       steps(server, input)
       println(s"\nFinished training game ${input.viewUrl}")
     }
   }
 
+  private def viewGameInBrowser(input: Input): Future[Unit] =
+    openUrlInBrowser(input.viewUrl)
+      .flatMap(_ => focusWindowWithTitle(input.game.id))
+      .andThen {
+        case Success(_) => println("Successfully opened game in browser")
+        case Failure(e) => println(e)
+      }
+
   def steps(server: VindiniumClient, input: Input) {
     failsafe {
-      step(server, input, bot = OffensiveBot())
+      step(server, input, bot = BigBadWolfBot())
     }
   }
 
