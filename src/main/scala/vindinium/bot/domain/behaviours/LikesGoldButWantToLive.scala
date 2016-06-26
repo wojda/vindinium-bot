@@ -8,20 +8,18 @@ case class LikesGoldButWantToLive() extends Bot {
   val minimumHealthPoints = 40
 
   override def move(input: Input): (Move, Bot) = {
-    println("HP: "+input.hero.life)
-    if (input.hero.life < minimumHealthPoints) youAreHurtGoToTavern(input)
-    else goToMine(input)
+    val nextMove = if (input.hero.life < minimumHealthPoints) youAreHurtGoToTavern(input).head else goToMine(input).head
+
+    (nextMove, this)
   }
 
-  def youAreHurtGoToTavern(input: Input) = {
+  private def youAreHurtGoToTavern(input: Input): List[Move] =
     input.game.board.pathToNearestTavernFrom(input.hero.pos)
-      .map(pathToTavern => (pathToTavern.moves.head, LikesGoldButWantToLive()))
-      .getOrElse((Stay, LikesGoldButWantToLive()))
-  }
+      .map(_.moves)
+      .getOrElse(List(Stay))
 
-  def goToMine(input: Input) = {
-    input.game.board.nearestMineFrom(input.hero)
-      .map(pathToMine => (pathToMine.moves.head, LikesGoldButWantToLive()))
-      .getOrElse((Stay, LikesGoldButWantToLive()))
-  }
+  private def goToMine(input: Input): List[Move] =
+    input.game.board.nearestMineFrom(input.hero.pos, excludeMinesOwnedBy = input.hero.id)
+      .map(_.moves)
+      .getOrElse(List(Stay))
 }
