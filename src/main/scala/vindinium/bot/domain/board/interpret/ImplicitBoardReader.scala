@@ -11,18 +11,22 @@ object ImplicitBoardReader {
     def nearestMineFrom(hero: Hero): Option[Path] = {
       val seekingAMine: PartialFunction[Tile, Boolean] = {
         case Tile.NeutralMine() => true
-        case Tile.OwnedMine(heroId) if hero.id != heroId => true
+        case Tile.OwnedMine(mineOwnerId) if hero.id != mineOwnerId => true
         case _ => false
       }
 
       findPath(hero.pos, seekingAMine)
     }
 
-    def pathToNearestTavernFrom(pos: Pos): Option[Path] = findPath(pos, seekingATavern)
-
-    private val seekingATavern: PartialFunction[Tile, Boolean] = {
+    def pathToNearestTavernFrom(pos: Pos): Option[Path] = findPath(pos, {
       case Tavern => true
       case _ => false
-    }
+    })
+
+    def pathToNearestHeroFrom(pos: Pos, excludedHeroId: Int = -1): Option[Path] = findPath(pos, {
+      case Tile.Hero(id) if id != excludedHeroId => true
+      case _ => false
+    })
   }
+
 }

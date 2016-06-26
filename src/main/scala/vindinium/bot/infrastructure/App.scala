@@ -1,7 +1,7 @@
 package vindinium.bot.infrastructure
 
 import os.Scripts._
-import vindinium.bot.domain.behaviours.{Bot, LikesGoldButWantToLive}
+import vindinium.bot.domain.behaviours.{Bot, OffensiveBot}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
@@ -59,7 +59,7 @@ object App {
 
   def steps(server: VindiniumClient, input: Input) {
     failsafe {
-      step(server, input, bot = LikesGoldButWantToLive())
+      step(server, input, bot = OffensiveBot())
     }
   }
 
