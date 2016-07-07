@@ -8,8 +8,8 @@ import scala.language.postfixOps
 import scalaj.http.{Http, HttpOptions, HttpRequest}
 
 final class VindiniumClient(endpoint: String, key: String) extends VindiniumProtocol {
-  val connectionTimeout = 1 minute
-  val readTimeout = 1 minute
+  val connectionTimeout = 10 minutes
+  val readTimeout = 10 minutes
 
   def arena: Input = send {
     Http(s"$endpoint/arena")
