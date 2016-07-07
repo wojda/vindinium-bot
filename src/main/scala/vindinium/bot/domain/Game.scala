@@ -22,4 +22,10 @@ case class Game(
   maxTurns: Int,
   heroes: List[Hero],
   board: Board,
-  finished: Boolean)
+  finished: Boolean) {
+
+  val ranking: List[(Int, Hero)] =
+    Stream.from(1)
+      .zip(heroes.sortWith(_.gold > _.gold))
+      .toList
+}

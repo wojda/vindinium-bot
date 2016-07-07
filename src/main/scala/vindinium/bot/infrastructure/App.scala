@@ -55,6 +55,14 @@ object App {
     }
   }
 
+  private def showResult(input: Input): Unit = {
+    println("*** Result ***")
+    input.game.ranking.foreach { case (position, hero) =>
+      val highlighting = if (hero.id == input.hero.id) " <-------" else ""
+      println(s"$position: ${hero.name}, \t\t gold: ${hero.gold} $highlighting")
+    }
+  }
+
   private def openGameInBrowser(input: Input): Unit =
     Option(System.getProperty("open_in_browser"))
     .filter(value => value == "true")
@@ -67,9 +75,10 @@ object App {
         }
     }
 
-  def steps(server: VindiniumClient, input: Input) {
+  def steps(server: VindiniumClient, input: Input) = {
     failsafe {
-      step(server, input, bot = BigBadWolfBot())
+      val finalInput = step(server, input, bot = BigBadWolfBot())
+      showResult(finalInput)
     }
   }
 
@@ -84,13 +93,13 @@ object App {
   }
 
   @annotation.tailrec
-  def step(server: VindiniumClient, input: Input, bot: Bot) {
+  def step(server: VindiniumClient, input: Input, bot: Bot): Input = {
     if (!input.game.finished) {
       val (move, newBot) = bot.move(input)
       import input._
       println(s"Hero - HP: ${hero.life},  position: ${hero.pos}. Next move: $move")
       step(server, server.move(input.playUrl, move), newBot)
-    }
+    } else { input }
   }
 
   def makeClient = (
