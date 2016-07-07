@@ -1,11 +1,11 @@
 package vindinium.bot.domain.behaviours
 import vindinium.bot.domain.board.Move._
 import vindinium.bot.domain.board.Path
-import vindinium.bot.infrastructure.Input
 import vindinium.bot.domain.board.interpret.ImplicitBoardReader._
+import vindinium.bot.infrastructure.Input
 
 case class BigBadWolfBot() extends Bot {
-  val minimumHealthPoints = 40
+  val minimumHealthPoints = 25
 
   override def move(input: Input): (Move, Bot) = {
     import input._
@@ -18,7 +18,9 @@ case class BigBadWolfBot() extends Bot {
       else if(enemyIsCloseAndHasMine(pathToNearestEnemy, input)) pathToNearestEnemy.get.moves.head
       else pathToMine(input).head
 
-    (nextMove, this)
+    val became = if(input.percentageOfOwnedMines > 40) DefensiveBot(this) else this
+
+    (nextMove, became)
   }
 
   private def pathToNearestTavern(input: Input): List[Move] =
