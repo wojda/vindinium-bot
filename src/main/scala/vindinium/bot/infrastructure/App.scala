@@ -1,5 +1,6 @@
 package vindinium.bot.infrastructure
 
+import org.slf4j.LoggerFactory
 import os.Scripts._
 import vindinium.bot.domain.behaviours.{BigBadWolfBot, Bot}
 
@@ -7,9 +8,11 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
 
 object App {
+  private val log = LoggerFactory.getLogger("Vindinium")
 
-  def main(args: Array[String]) = makeClient match {
-    case Left(error) ⇒ println(error)
+  def main(args: Array[String]): Unit = makeClient match {
+    case Left(error) ⇒
+      log.error("Could not create vindimium client. Error: {}", error)
     case Right(server) ⇒ args match {
       case Array() ⇒
         training(server, _.training(100))
@@ -21,21 +24,27 @@ object App {
         training(server, _.training(int(turns)))
       case Array("training", turns, map) ⇒
         training(server, _.training(int(turns), Some(map)))
-      case a ⇒ println("Invalid arguments: " + a.mkString(" "))
+      case a ⇒
+        log.error("Invalid arguments: {}. Game cannot be started.", a.mkString(" "))
     }
   }
 
   def arena(server: VindiniumClient, games: Int) {
     @annotation.tailrec
     def oneGame(it: Int) {
-      println(s"[$it/$games] Waiting for pairing...")
+      log.info("[{}/{}] Waiting for pairing...", it, games)
+
       val input = server.arena
-      println(s"[$it/$games] Start arena game ${input.viewUrl}")
+      log.info("[{}/{}] Starting arena game", it, games)
+      log.info("Game's url: {}", input.viewUrl)
 
       openGameInBrowser(input)
 
       steps(server, input)
-      println(s"\n[$it/$games] Finished arena game ${input.viewUrl}")
+
+      log.info("[{}/{}] Finished arena game", it, games)
+      log.info("Game's url: {}", input.viewUrl)
+
       if (it < games) oneGame(it + 1)
     }
     failsafe {
@@ -46,20 +55,20 @@ object App {
   def training(server: VindiniumClient, boot: VindiniumClient ⇒ Input) {
     failsafe {
       val input = boot(server)
-      println("Training game " + input.viewUrl)
+      log.info("Training game {}", input.viewUrl)
 
       openGameInBrowser(input)
 
       steps(server, input)
-      println(s"\nFinished training game ${input.viewUrl}")
+      log.info("Finished trainging game {}", input.viewUrl)
     }
   }
 
   private def showResult(input: Input): Unit = {
-    println("*** Result ***")
+    log.info("*** Results ***")
     input.game.ranking.foreach { case (position, hero) =>
       val highlighting = if (hero.id == input.hero.id) " <-------" else ""
-      println(s"$position: ${hero.name}, \t\t gold: ${hero.gold} $highlighting")
+      log.info(s"$position: ${hero.name}, \t\t gold: ${hero.gold} $highlighting")
     }
   }
 
@@ -70,8 +79,8 @@ object App {
       openUrlInBrowser(input.viewUrl)
         .flatMap(_ => focusWindowWithTitle(input.game.id))
         .andThen {
-          case Success(_) => println("Successfully opened game in browser")
-          case Failure(e) => println(e)
+          case Success(_) => log.debug("Successfully opened game in browser")
+          case Failure(exception: Throwable) => log.error("Could not open game in browser.", exception)
         }
     }
 
@@ -87,8 +96,8 @@ object App {
       action
     }
     catch {
-      case e: scalaj.http.HttpStatusException ⇒ println(s"\n[${e.code}] ${e.body}")
-      case e: Exception                       ⇒ println(s"\n$e")
+      case e: scalaj.http.HttpStatusException ⇒ log.error(s"[${e.code}] ${e.body}", e)
+      case e: Exception                       ⇒ log.error("Error occured", e)
     }
   }
 
@@ -97,7 +106,7 @@ object App {
     if (!input.game.finished) {
       val (move, newBot) = bot.move(input)
       import input._
-      println(s"Hero - HP: ${hero.life},  position: ${hero.pos}. Next move: $move")
+      log.debug("Hero - HP: {}, position: {}. Next move: {}", Int.box(hero.life), hero.pos, move)
       step(server, server.move(input.playUrl, move), newBot)
     } else { input }
   }
