@@ -6,6 +6,7 @@ import vindinium.bot.domain.behaviours.{BigBadWolfBot, Bot}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.util.{Failure, Success}
+import Integer.parseInt
 
 object App {
   private val log = LoggerFactory.getLogger("Vindinium")
@@ -19,11 +20,11 @@ object App {
       case Array("arena") ⇒
         arena(server, Int.MaxValue)
       case Array("arena", games) ⇒
-        arena(server, int(games))
+        arena(server, parseInt(games))
       case Array("training", turns) ⇒
-        training(server, _.training(int(turns)))
+        training(server, _.training(parseInt(turns)))
       case Array("training", turns, map) ⇒
-        training(server, _.training(int(turns), Some(map)))
+        training(server, _.training(parseInt(turns), Some(map)))
       case a ⇒
         log.error("Invalid arguments: {}. Game cannot be started.", a.mkString(" "))
     }
@@ -97,7 +98,7 @@ object App {
     }
     catch {
       case e: scalaj.http.HttpStatusException ⇒ log.error(s"[${e.code}] ${e.body}", e)
-      case e: Exception                       ⇒ log.error("Error occured", e)
+      case e: Exception                       ⇒ log.error("An error occurred", e)
     }
   }
 
@@ -119,5 +120,4 @@ object App {
       case (url, key) ⇒ Right(new VindiniumClient(url + "/api", key))
     }
 
-  def int(str: String) = java.lang.Integer.parseInt(str)
 }
