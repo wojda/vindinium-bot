@@ -35,10 +35,6 @@ class FindTavernSpec extends UnitSpec with PropertyChecks with Boards with Gener
     }
   }
 
-  it should "provide path to the nearest tavern" in {
-    pending
-  }
-
   it should "provide path to the nearest tavern bypassing all obstacles" in {
     forAll(positionGen) { heroPosition =>
       val path = board.pathToNearestTavernFrom(heroPosition).get
