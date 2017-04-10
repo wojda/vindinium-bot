@@ -1,1 +1,1 @@
-alias training=run training 40 m1
+alias training=botScala/run training 40 m1

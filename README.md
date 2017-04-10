@@ -7,10 +7,10 @@
 sbt -Dkey=mySecretKey
 
 Training mode, 30 turns:
-> run training 30
+> botScala/run training 30
 
 Arena mode, 10 games:
-> run arena 10
+> botScala/run arena 10
 ```
 
 
